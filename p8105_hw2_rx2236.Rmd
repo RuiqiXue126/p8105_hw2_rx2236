@@ -79,7 +79,14 @@ The `pols` data has `r nrow(pols)` observations and `r ncol(pols)` variables and
 
 ## Problem 2
 
-```{r}
+```{r Read and clean the Mr. Trash Wheel sheet}
+mr_trash_wheel = read_excel("./data/202207 Trash Wheel Collection Data.xlsx",
+                            sheet = "Mr. Trash Wheel",
+                            range = "A2:M549") |>
+  rename_with(~ tolower(gsub(" ", "_", .x, fixed = TRUE))) |>
+  rename(weight = "weight_(tons)", volume = "volume_(cubic_yards)") |>
+  mutate(homes_powered = weight*500/30)
+  
 
 ```
 
