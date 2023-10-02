@@ -115,10 +115,45 @@ gwynnda_trash_wheel = read_excel("./data/202207 Trash Wheel Collection Data.xlsx
                             range = "A2:J108") |>
   rename_with(~ tolower(gsub(" ", "_", .x, fixed = TRUE))) |>
   rename(weight = "weight_(tons)", volume = "volume_(cubic_yards)") |>
-  mutate(homes_powered = weight*500/30)
-
+  mutate(homes_powered = weight*500/30) |>
+  mutate(month = str_to_title(month))
 
 ```
+
+
+Add an additional variable to all datasets to keep track of which Trash Wheel is which 
+
+```{r add a variable to all datasets}
+mr_trash_wheel[, "trash_wheel"] = "Mr."
+mr_trash_wheel = relocate(mr_trash_wheel, trash_wheel, .after = dumpster)
+
+professor_trash_wheel[, "trash_wheel"] = "Professor"
+professor_trash_wheel = relocate(professor_trash_wheel, trash_wheel, .after = dumpster)
+
+gwynnda_trash_wheel[, "trash_wheel"] = "Gwynnda"
+gwynnda_trash_wheel = relocate(gwynnda_trash_wheel, trash_wheel, .after = dumpster)
+
+```
+
+
+Combine these three datasets
+
+```{r combine three datasets}
+mr_trash_wheel = mutate(mr_trash_wheel, year = as.numeric(year))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
