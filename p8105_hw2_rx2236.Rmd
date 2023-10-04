@@ -223,7 +223,7 @@ amyloid_df = amyloid_df |>
   
 ```
 
-After pivoting, the dataset has `r ncol(amyloid_df)`
+After pivoting, the dataset has `r ncol(amyloid_df)` 
 
 
 
