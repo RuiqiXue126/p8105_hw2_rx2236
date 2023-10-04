@@ -180,22 +180,50 @@ baseline_df =
   )
 ```
 
-Up to this point we cleaned the dataset with proper variable names, and encoded the `sex` and `APOE4 carrier status` as non-numeric. From here, we see that `r nrow(baseline_df)` patients were recruited at the baseline.
+There are `r ncol(baseline_df)` variables in this dataset. `id` identifies each participant, `education` indicates number of years of education, `apoe4` indicates the APOE4 status of the participants. `age_at_baseline` and `age_at_onset` indicate age relavant information accordingly. Up to this point we cleaned the dataset with proper variable names, and encoded the `sex` and `APOE4 carrier status` as non-numeric. From here, we see that `r nrow(baseline_df)` patients were recruited at the baseline.
 
-Now we remove the participants who do not meet the stated inclusion criteria (i.e. no MCI at baseline).
+
 
 ```{r remove no MCI}
 baseline_df  = 
-  filter(baseline_df, age_at_onset != ".")
+  filter(baseline_df, age_at_baseline < age_at_onset | age_at_onset == ".")
+  
+```
+Now we remove the participants who do not meet the stated inclusion criteria (i.e. no MCI at baseline).
+
+As a result, we get the number of participants who developed MCI is `r nrow(baseline_df)`.
+
+Calculated from the current dataframe, the average baseline age is `r mean(baseline_df$age_at_baseline)`. 
+
+
+And the proportion of women in the study who are APOE4 carriers is `r nrow(filter(baseline_df, sex == "female" & apoe4 == "carrier")) / nrow(filter(baseline_df, sex == "female"))`.
+
+Now import the amyloid dataset and clean the variable names.
+
+```{r}
+amyloid_df = 
+  read_csv("data/data_mci/mci_amyloid.csv",
+           skip = 1) |>
+  janitor::clean_names()
+
+```
+
+At this point we have `r ncol(amyloid_df)` variables including a `study_id` and 5 time variables, and `r nrow(amyloid_df)` entries.
+
+
+Now we pivot the dataframe.
+
+```{r}
+amyloid_df = amyloid_df |>
+  pivot_longer(
+    baseline:time_8,
+    names_to = "time",
+    values_to = "biomarker_value"
+  ) 
   
 ```
 
-So after removing those participants, we get the number of participants who developed MCI is `r nrow(baseline_df)`.
-
-
-
-
-
+After pivoting, the dataset has `r ncol(amyloid_df)`
 
 
 
