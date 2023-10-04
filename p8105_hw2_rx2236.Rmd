@@ -248,7 +248,7 @@ inner_combined = inner_join(baseline_df, amyloid_df)
 
 We first to rename the `study_id` variable in the amyloid dataset into `id` as the same as in the baseline dataset so that the inner join can be performed with this common variable.
 
-The combined dataset has `r nrow(distinct(inner_combined))`
+The combined dataset has `r n_distinct(inner_combined$id)` unique id which means there are `r n_distinct(inner_combined$id)` participants appear in both datasets. This combined dataset has `r ncol(inner_combined)` variables which include all variables from the baseline and the amyloid dataset, since the only shared variable in these two datasets is the identifier `id`.
 
 
 
