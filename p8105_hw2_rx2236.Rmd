@@ -82,9 +82,9 @@ The `pols` data has `r nrow(pols)` observations and `r ncol(pols)` variables and
 Clean the Mr. Trash Wheel sheet
 
 ```{r clean the Mr. Trash Wheel sheet}
-mr_trash_wheel = read_excel("./data/202207 Trash Wheel Collection Data.xlsx",
+mr_trash_wheel = read_excel("./data/202309 Trash Wheel Collection Data.xlsx",
                             sheet = "Mr. Trash Wheel",
-                            range = "A2:M549") |>
+                            range = "A2:M586") |>
   rename_with(~ tolower(gsub(" ", "_", .x, fixed = TRUE))) |>
   rename(weight = "weight_(tons)", volume = "volume_(cubic_yards)") |>
   mutate(homes_powered = weight*500/30)
@@ -96,9 +96,9 @@ mr_trash_wheel = read_excel("./data/202207 Trash Wheel Collection Data.xlsx",
 Clean the Professor Trash Wheel sheet
 
 ```{r clean the Professor Trash Wheel sheet}
-professor_trash_wheel = read_excel("./data/202207 Trash Wheel Collection Data.xlsx",
+professor_trash_wheel = read_excel("./data/202309 Trash Wheel Collection Data.xlsx",
                             sheet = "Professor Trash Wheel",
-                            range = "A2:L96") |>
+                            range = "A2:L108") |>
   rename_with(~ tolower(gsub(" ", "_", .x, fixed = TRUE))) |>
   rename(weight = "weight_(tons)", volume = "volume_(cubic_yards)") |>
   mutate(homes_powered = weight*500/30)
@@ -110,9 +110,9 @@ professor_trash_wheel = read_excel("./data/202207 Trash Wheel Collection Data.xl
 Clean the Gwynnda Trash Wheel sheet
 
 ```{r clean the Gwynnda Trash Wheel sheet}
-gwynnda_trash_wheel = read_excel("./data/202207 Trash Wheel Collection Data.xlsx",
+gwynnda_trash_wheel = read_excel("./data/202309 Trash Wheel Collection Data.xlsx",
                             sheet = "Gwynnda Trash Wheel",
-                            range = "A2:J108") |>
+                            range = "A2:K157") |>
   rename_with(~ tolower(gsub(" ", "_", .x, fixed = TRUE))) |>
   rename(weight = "weight_(tons)", volume = "volume_(cubic_yards)") |>
   mutate(homes_powered = weight*500/30) |>
@@ -141,16 +141,56 @@ Combine these three datasets
 ```{r combine three datasets}
 mr_trash_wheel = mutate(mr_trash_wheel, year = as.numeric(year))
 
+combined_df = full_join(mr_trash_wheel, professor_trash_wheel) |>
+  full_join(x = _, y = gwynnda_trash_wheel)
+
 ```
 
+After combining the three datasets, the resulting dataset contains `r nrow(combined_df)` observations,
+and `r ncol(combined_df)` variables. Key variables include `trash_wheel` which is the new-added variable indicating the name of Trash Wheel for each dumpster; `month`, `year` and `date` indicating the date of each dumpster; `weight` and `volume` indicating the weight and volume of each dumpster. There are several variables such as `plastic_bottles` indicating the types of trash and the corresponding amount of each dumpster. Finally, there is `homes_powered` indicating the approxiamate number of households the trash provides electricity for.
 
 
 
+The total weight of trash collected by Professor Trash Wheel was `r sum(professor_trash_wheel$weight)`. 
+And the total number of cigarette butts collected by Gwynnda in July of 2021 was `r sum(filter(gwynnda_trash_wheel, month == "July" & year == 2021)$cigarette_butts)`.
 
 
 
+## Problem 3
 
+Import and clean the baseline dataset
 
+```{r clean the baseline dataset}
+baseline_df = 
+  read_csv("data/data_mci/MCI_baseline.csv",
+           skip = 1) |>
+  janitor::clean_names() |>
+  rename("age_at_baseline" = "current_age") |>
+  mutate(
+    sex = case_match(
+      sex,
+      1 ~ "male",
+      0 ~ "female")) |>
+  mutate(
+    apoe4 = case_match(
+      apoe4,
+      1 ~ "carrier",
+      0 ~ "non-carrier"
+    )
+  )
+```
+
+Up to this point we cleaned the dataset with proper variable names, and encoded the `sex` and `APOE4 carrier status` as non-numeric. From here, we see that `r nrow(baseline_df)` patients were recruited at the baseline.
+
+Now we remove the participants who do not meet the stated inclusion criteria (i.e. no MCI at baseline).
+
+```{r remove no MCI}
+baseline_df  = 
+  filter(baseline_df, age_at_onset != ".")
+  
+```
+
+So after removing those participants, we get the number of participants who developed MCI is `r nrow(baseline_df)`.
 
 
 
