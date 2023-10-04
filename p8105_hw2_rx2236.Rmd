@@ -250,5 +250,8 @@ We first to rename the `study_id` variable in the amyloid dataset into `id` as t
 
 The combined dataset has `r n_distinct(inner_combined$id)` unique id which means there are `r n_distinct(inner_combined$id)` participants appear in both datasets. This combined dataset has `r ncol(inner_combined)` variables which include all variables from the baseline and the amyloid dataset, since the only shared variable in these two datasets is the identifier `id`.
 
-
+Export the resulting dataset as a csv file.
+```{r}
+write.csv(inner_combined,file='data/p3_resulting_df.csv')
+```
 
