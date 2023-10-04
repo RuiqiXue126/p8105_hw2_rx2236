@@ -226,4 +226,29 @@ amyloid_df = amyloid_df |>
 After pivoting, the dataset has `r ncol(amyloid_df)` variables including `study_id`, `time` and `biomarker_value` which is the amyloid beta 42/40 ratio; and `r nrow(amyloid_df)` entries.
 
 
+Now check whether some participants appear in only the baseline or amyloid datasets.
+
+```{r}
+only_in_baseline = subset(baseline_df, !id %in% amyloid_df$study_id)
+print(only_in_baseline)
+
+only_in_amyloid = subset(amyloid_df, !study_id %in% baseline_df$id)
+print(only_in_amyloid)
+```
+
+So, there are `r nrow(only_in_baseline)` participants appear in only the baseline dataset, and `r n_distinct(only_in_amyloid$study_id)` participants appear in only the amyloid dataset. 
+
+
+Now combine the two datasets so that only participants who appear in both datasets are retained using inner join.
+
+```{r}
+amyloid_df = rename(amyloid_df, id = study_id)
+inner_combined = inner_join(baseline_df, amyloid_df)
+```
+
+We first to rename the `study_id` variable in the amyloid dataset into `id` as the same as in the baseline dataset so that the inner join can be performed with this common variable.
+
+The combined dataset has `r nrow(distinct(inner_combined))`
+
+
 
