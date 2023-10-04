@@ -223,7 +223,7 @@ amyloid_df = amyloid_df |>
   
 ```
 
-After pivoting, the dataset has `r ncol(amyloid_df)` 
+After pivoting, the dataset has `r ncol(amyloid_df)` variables including `study_id`, `time` and `biomarker_value` which is the amyloid beta 42/40 ratio; and `r nrow(amyloid_df)` entries.
 
 
 
