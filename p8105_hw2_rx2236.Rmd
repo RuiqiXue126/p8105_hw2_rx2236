@@ -236,7 +236,7 @@ only_in_amyloid = subset(amyloid_df, !study_id %in% baseline_df$id)
 print(only_in_amyloid)
 ```
 
-So, there are `r nrow(only_in_baseline)` participants appear in only the baseline dataset, and `r n_distinct(only_in_amyloid$study_id)` participants appear in only the amyloid dataset. 
+So, there are `r nrow(only_in_baseline)` participants appear in only the baseline dataset, this possibly means the `r nrow(only_in_baseline)` participants had dropped off from the study or failed follow-up. There are `r n_distinct(only_in_amyloid$study_id)` participants appear in only the amyloid dataset, which possibly means the research team failed to properly record their demographic information at the begining of the study. 
 
 
 Now combine the two datasets so that only participants who appear in both datasets are retained using inner join.
