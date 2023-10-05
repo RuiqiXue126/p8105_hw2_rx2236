@@ -191,7 +191,7 @@ baseline_df  =
 ```
 Now we remove the participants who do not meet the stated inclusion criteria (i.e. no MCI at baseline).
 
-As a result, we get the number of participants who developed MCI is `r nrow(baseline_df)`.
+As a result, we get the number of participants who developed MCI is `r nrow(filter(baseline_df, age_at_onset != "."))`.
 
 Calculated from the current dataframe, the average baseline age is `r mean(baseline_df$age_at_baseline)`. 
 
